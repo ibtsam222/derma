@@ -186,7 +186,8 @@ class Doctor_instructions extends StatelessWidget {
                                   builder: (context) => HomePage(),)
                             );
 
-                          }, child: Text("See all",style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xFF9F73AB),fontFamily: 'Releway',),)),
+                          },
+                           child: Text("See all and add",style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xFF9F73AB),fontFamily: 'Releway',),)),
                           SizedBox(width: 10,),
                         ],
                       ),

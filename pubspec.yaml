@@ -51,6 +51,7 @@ dependencies:
   get_storage: ^2.0.3
   get: ^4.3.8
   date_picker_timeline: ^1.2.3
+  lottie: ^2.3.2
 
 
 
@@ -77,6 +78,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/animation/scan.json
+    - assets/animation/todo.json
+
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

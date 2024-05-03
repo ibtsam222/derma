@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
-
 import 'package:lottie/lottie.dart';
-import 'package:derma/Both/SelectPart.dart';
 
-class ScanPage extends StatelessWidget {
-  const ScanPage({Key? key}) : super(key: key);
+import '../ui_Todo/pages/Doctor_instructions.dart';
 
+class MedicationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Expanded(
+          SizedBox(height: 30),
 
-              child: Lottie.asset('assets/animation/todo.json'),
-
+          Container(
+            width: 312,
+            height: 60,
+            child: Text(
+              'Explore your treatment plan and add your own',
+              style: TextStyle(
+                fontSize: 20,
+                color: Color(0xFF454571),
+                fontFamily: 'Raleway',
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
+
+          SizedBox(
+            height: 290,
+            width: 600,
+            child: Lottie.asset('assets/animation/todo.json'),
+          ),
+          SizedBox(height: 50),
+
           Container(
             height: 42,
             width: 310,
-            margin: EdgeInsets.only(bottom: 100,left: 38,right: 35,top: 50),
+            margin: EdgeInsets.only(right: 20,left:20,bottom: 100),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               gradient: LinearGradient(
@@ -39,12 +51,12 @@ class ScanPage extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => SelectPart(title: ''),
+                    builder: (_) => Doctor_instructions(),
                   ),
                 );
               },
               child: Text(
-                "Start",
+                "Continue",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -53,6 +65,7 @@ class ScanPage extends StatelessWidget {
               ),
             ),
           ),
+
         ],
       ),
     );

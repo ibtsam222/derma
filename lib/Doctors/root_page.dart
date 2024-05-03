@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:derma/Patients/LoginPatient.dart';
-
 import '../Both/ScanPage.dart';
-import '../ChatPage.dart';
-import 'HomeDoctor.dart';
 import '../Massages.dart';
-import '../Patients/MedicationPage.dart';
+import '../Both/MedicationPage.dart';
 import '../Patients/favourite.dart';
+import 'HomeDoctor.dart';
 
 void main() {
   runApp(MyApp());
@@ -88,8 +86,9 @@ class _RootPageState extends State<RootPage> {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.menu_outlined),
-        iconSize: 35,
 
+        iconSize: 27,
+        color:Color(0xFF454571),
         onPressed: () {
           _advancedDrawerController.showDrawer();
         },
