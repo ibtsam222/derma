@@ -53,6 +53,7 @@ class SignUpPatient extends StatelessWidget {
       } else {
         // Handle other status codes
         showDialog(
+
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Error'),

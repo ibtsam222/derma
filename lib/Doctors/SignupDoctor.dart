@@ -451,6 +451,8 @@ class SignUpDoctor extends StatelessWidget {
                                   MaterialPageRoute(builder: (context) => RootPage()),
                                 );
                               },
+
+
                               child: Text(
                                 "LOGIN",
                                 style: TextStyle(color: Color(0xFF9F73AB), fontSize: 20, fontWeight: FontWeight.bold),
