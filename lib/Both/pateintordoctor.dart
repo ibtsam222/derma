@@ -106,7 +106,7 @@ class PatiantPage extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SignupPatient()),
+                              MaterialPageRoute(builder: (context) => SignUpPatient()),
                             );
                           },
                           child: Text(

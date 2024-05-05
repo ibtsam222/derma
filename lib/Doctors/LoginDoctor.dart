@@ -1,6 +1,9 @@
+import 'package:derma/Doctors/HomeDoctor.dart';
 import 'package:flutter/material.dart';
-import 'package:derma/Patients/RootPatient.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:derma/Doctors/SignupDoctor.dart';
+
 void main() => runApp(
   MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -9,6 +12,50 @@ void main() => runApp(
 );
 
 class LoginDoctor extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> _loginDoctor(BuildContext context) async {
+    final url = Uri.parse('http://dermdiag.somee.com/api/Doctors/LoginDoctor');
+    final response = await http.post(
+      url,
+      body: json.encode({
+        'email': emailController.text,
+        'password': passwordController.text,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeDoctor()),
+      );
+    } else {
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid email or password'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,24 +74,18 @@ class LoginDoctor extends StatelessWidget {
           Positioned(
             right: 20,
             top: 20,
-
-            // duration: Duration(seconds: 1),
             child: Text(
               "DermDiag",
               style: TextStyle(
                 color: Color.fromRGBO(69, 69, 113, 1),
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-
               ),
             ),
-
           ),
           Positioned(
             left: 30,
             top: 20,
-
-            // duration: Duration(seconds: 1),
             child: Container(
               width: 60,
               height: 50,
@@ -54,7 +95,6 @@ class LoginDoctor extends StatelessWidget {
                 ),
               ),
             ),
-
           ),
           Center(
             child: SingleChildScrollView(
@@ -63,7 +103,6 @@ class LoginDoctor extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 150),
-
                   Container(
                     margin: EdgeInsets.only(bottom: 20),
                     child: Center(
@@ -77,12 +116,10 @@ class LoginDoctor extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: EdgeInsets.all(30.0),
                     child: Column(
                       children: <Widget>[
-
                         Form(
                           child: Column(
                             children: <Widget>[
@@ -101,6 +138,7 @@ class LoginDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: emailController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.email, color: Color.fromRGBO(98, 79, 130, 1)),
                                     hintText: "Email",
@@ -134,6 +172,7 @@ class LoginDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: passwordController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.lock, color: Color.fromRGBO(98, 79, 130, 1)),
                                     hintText: "Password",
@@ -155,10 +194,7 @@ class LoginDoctor extends StatelessWidget {
                             ],
                           ),
                         ),
-
-
                         SizedBox(height: 30),
-
                         Container(
                           height: 50,
                           width: 350,
@@ -173,10 +209,7 @@ class LoginDoctor extends StatelessWidget {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>RootPatient()),
-                              );
+                              _loginDoctor(context);
                             },
                             child: Text(
                               "LOGIN",
@@ -185,29 +218,27 @@ class LoginDoctor extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 70),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               "Don't have an account?",
-                              style: TextStyle(color: Color.fromRGBO(63, 59, 108, 1),fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Color.fromRGBO(63, 59, 108, 1), fontWeight: FontWeight.bold),
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) =>SignUpDoctor()),
+                                  MaterialPageRoute(builder: (context) => SignUpDoctor()),
                                 );
                               },
                               child: Text(
                                 "Sign Up",
-                                style: TextStyle(color: Color(0xFF9F73AB),fontSize: 20, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Color(0xFF9F73AB), fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
                         ),
-
                       ],
                     ),
                   ),

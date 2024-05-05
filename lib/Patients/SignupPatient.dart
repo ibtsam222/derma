@@ -1,47 +1,90 @@
-import 'package:flutter/material.dart';
-import 'package:derma/Doctors/HomeDoctor.dart';
+import 'dart:convert';
 import 'package:derma/Patients/LoginPatient.dart';
-import 'package:derma/Doctors/root_page.dart';
+import 'package:flutter/material.dart';
+import '../Patients/HomePatient.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(
   MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: SignupPatient(),
+    home: SignUpPatient(),
   ),
 );
 
-class SignupPatient extends StatefulWidget {
-  @override
-  _SignupPatientState createState() => _SignupPatientState();
-}
-
-class _SignupPatientState extends State<SignupPatient> {
-  bool _containsNumber(String value) {
-    return value.contains(RegExp(r'\d'));
-  }
-
-  bool _containsSpecialCharacter(String value) {
-    List<String> specialCharacters = ['!', '@', '#', '\$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';', '"', "'", '<', '>', ',', '.', '?', '/', '~', '`'];
-
-    for (String char in specialCharacters) {
-      if (value.contains(char)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
+class SignUpPatient extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController fullnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController nationalidcontroller = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
-  String? _fullName;
-  String? _email;
-  String? _phoneNumber;
-  String? _nationalId;
-  String? _gender;
-  String? _password;
-  String? _confirmPassword;
-  bool _isGmailValid = true;
+
+  Future<void> registertry(BuildContext context) async {
+    final url = 'http://dermdiag.somee.com/api/Patients/Register';
+    final Map<String, dynamic> data = {
+      'name': fullnameController.text,
+      'email': emailController.text,
+      'password': passwordController.text,
+      'phone': phoneController.text,
+      'gender': genderController.text,
+      'address': nationalidcontroller.text,
+      'description': descriptionController.text,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePatient()),
+        );
+      } else {
+        // Handle other status codes
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign up. Please try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle errors such as connection issues
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to sign up. Please check your internet connection and try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +169,12 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: fullnameController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.person),
+                                    prefixIcon: Icon(Icons.person, color: Color.fromRGBO(98, 79, 130, 1)),
                                     hintText: "Full Name",
+                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
+                                    border: InputBorder.none,
                                   ),
                                   keyboardType: TextInputType.text,
                                   validator: (value) {
@@ -137,9 +183,6 @@ class _SignupPatientState extends State<SignupPatient> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (value) {
-                                    _fullName = value;
-                                  },
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -158,25 +201,19 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: emailController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.email),
                                     hintText: "Email",
-                                    errorText: !_isGmailValid ? 'Please enter a valid Gmail address' : null,
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter an email';
                                     } else if (!value.contains('@gmail.com')) {
-                                      setState(() {
-                                        _isGmailValid = false;
-                                      });
                                       return 'Please enter a valid Gmail address';
                                     }
                                     return null;
-                                  },
-                                  onSaved: (value) {
-                                    _email = value;
                                   },
                                 ),
                               ),
@@ -196,19 +233,19 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: phoneController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.phone),
                                     hintText: "Phone Number",
                                   ),
                                   keyboardType: TextInputType.phone,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty || value.length != 11) {
-                                      return 'Please enter a valid phone number';
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your phone number';
+                                    } else if (!RegExp(r'^\d{11}$').hasMatch(value)) {
+                                      return 'Phone number must contain 11 digits';
                                     }
                                     return null;
-                                  },
-                                  onSaved: (value) {
-                                    _phoneNumber = value;
                                   },
                                 ),
                               ),
@@ -228,19 +265,19 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: descriptionController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.credit_card),
-                                    hintText: "National ID",
+                                    prefixIcon: Icon(Icons.description, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    hintText: "Description",
+                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
+                                    border: InputBorder.none,
                                   ),
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.text,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty || value.length != 14) {
-                                      return 'Please enter a valid national ID';
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your description';
                                     }
                                     return null;
-                                  },
-                                  onSaved: (value) {
-                                    _nationalId = value;
                                   },
                                 ),
                               ),
@@ -260,6 +297,7 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: genderController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.people),
                                     hintText: "Gender",
@@ -271,8 +309,35 @@ class _SignupPatientState extends State<SignupPatient> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (value) {
-                                    _gender = value;
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Color(0xFF9F73AB)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(143, 148, 251, .2),
+                                      blurRadius: 20.0,
+                                      offset: Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: TextFormField(
+                                  controller: nationalidcontroller,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.credit_card),
+                                    hintText: "National Id",
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your location';
+                                    }
+                                    return null;
                                   },
                                 ),
                               ),
@@ -292,19 +357,19 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: passwordController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.lock),
                                     hintText: "Password",
                                   ),
                                   obscureText: true,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty || value.length < 6 || !_containsNumber(value) || !_containsSpecialCharacter(value)) {
-                                      return 'Password must be at least 6 characters long and contain at least one number and one special character';
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a password';
+                                    } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$').hasMatch(value)) {
+                                      return 'Password must contain at least 8 characters, one uppercase letter, at least two digits, and at least one special character';
                                     }
                                     return null;
-                                  },
-                                  onSaved: (value) {
-                                    _password = value;
                                   },
                                 ),
                               ),
@@ -324,26 +389,28 @@ class _SignupPatientState extends State<SignupPatient> {
                                   ],
                                 ),
                                 child: TextFormField(
+
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.lock),
                                     hintText: "Confirm Password",
                                   ),
                                   obscureText: true,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty || value != _password) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please confirm your password';
+                                    } else if (value != passwordController.text) {
                                       return 'Passwords do not match';
                                     }
                                     return null;
-                                  },
-                                  onSaved: (value) {
-                                    _confirmPassword = value;
                                   },
                                 ),
                               ),
                             ],
                           ),
                         ),
+
                         SizedBox(height: 20),
+
                         Container(
                           height: 50,
                           width: 350,
@@ -358,10 +425,9 @@ class _SignupPatientState extends State<SignupPatient> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => RootPage()),
-                              );
+                              if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                                registertry(context);
+                              }
                             },
                             child: Text(
                               "SIGNUP",

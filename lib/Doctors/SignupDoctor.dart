@@ -1,7 +1,8 @@
+import 'dart:convert';
+import 'package:derma/Doctors/HomeDoctor.dart';
 import 'package:flutter/material.dart';
-import 'package:derma/Patients/RootPatient.dart';
 import 'LoginDoctor.dart';
-
+import 'package:http/http.dart' as http;
 
 void main() => runApp(
   MaterialApp(
@@ -11,6 +12,80 @@ void main() => runApp(
 );
 
 class SignUpDoctor extends StatelessWidget {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController fullnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
+
+  Future<void> registertry(BuildContext context) async {
+    final url = 'http://dermdiag.somee.com/api/Doctors/RegisterDoctor';
+    final Map<String, dynamic> data = {
+      'name': fullnameController.text,
+      'email': emailController.text,
+      'password': passwordController.text,
+      'phone': phoneController.text,
+      'gender': genderController.text,
+      'address': addressController.text,
+      'description': descriptionController.text,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeDoctor()),
+        );
+      } else {
+        // Handle other status codes
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign up. Please try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle errors such as connection issues
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to sign up. Please check your internet connection and try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +151,7 @@ class SignUpDoctor extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Form(
+                          key: _formKey,
                           child: Column(
                             children: <Widget>[
                               Container(
@@ -93,6 +169,7 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: fullnameController,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.person, color: Color.fromRGBO(98, 79, 130, 1)),
                                     hintText: "Full Name",
@@ -124,11 +201,10 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: emailController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.email, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    prefixIcon: Icon(Icons.email),
                                     hintText: "Email",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
-                                    border: InputBorder.none,
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) {
@@ -157,16 +233,17 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: phoneController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.phone, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    prefixIcon: Icon(Icons.phone),
                                     hintText: "Phone Number",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
-                                    border: InputBorder.none,
                                   ),
                                   keyboardType: TextInputType.phone,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter your phone number';
+                                    } else if (!RegExp(r'^\d{11}$').hasMatch(value)) {
+                                      return 'Phone number must contain 11 digits';
                                     }
                                     return null;
                                   },
@@ -188,16 +265,17 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: descriptionController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.credit_card, color: Color.fromRGBO(98, 79, 130, 1)),
-                                    hintText: "National ID",
+                                    prefixIcon: Icon(Icons.description, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    hintText: "Description",
                                     hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
                                     border: InputBorder.none,
                                   ),
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.text,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your national ID';
+                                      return 'Please enter your description';
                                     }
                                     return null;
                                   },
@@ -219,11 +297,10 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: genderController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.people, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    prefixIcon: Icon(Icons.people),
                                     hintText: "Gender",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
-                                    border: InputBorder.none,
                                   ),
                                   keyboardType: TextInputType.text,
                                   validator: (value) {
@@ -250,11 +327,10 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: addressController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.location_on, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    prefixIcon: Icon(Icons.location_on),
                                     hintText: "Clinic address",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
-                                    border: InputBorder.none,
                                   ),
                                   keyboardType: TextInputType.text,
                                   validator: (value) {
@@ -263,7 +339,6 @@ class SignUpDoctor extends StatelessWidget {
                                     }
                                     return null;
                                   },
-
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -282,18 +357,17 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+                                  controller: passwordController,
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.lock, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    prefixIcon: Icon(Icons.lock),
                                     hintText: "Password",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
-                                    border: InputBorder.none,
                                   ),
                                   obscureText: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter a password';
-                                    } else if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(value)) {
-                                      return 'Password must contain at least 1 letter and 1 number';
+                                    } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$').hasMatch(value)) {
+                                      return 'Password must contain at least 8 characters, one uppercase letter, at least two digits, and at least one special character';
                                     }
                                     return null;
                                   },
@@ -315,16 +389,17 @@ class SignUpDoctor extends StatelessWidget {
                                   ],
                                 ),
                                 child: TextFormField(
+
                                   decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.lock, color: Color.fromRGBO(98, 79, 130, 1)),
+                                    prefixIcon: Icon(Icons.lock),
                                     hintText: "Confirm Password",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(98, 79, 130, 1)),
-                                    border: InputBorder.none,
                                   ),
                                   obscureText: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please confirm your password';
+                                    } else if (value != passwordController.text) {
+                                      return 'Passwords do not match';
                                     }
                                     return null;
                                   },
@@ -350,10 +425,9 @@ class SignUpDoctor extends StatelessWidget {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>RootPatient()),
-                              );
+                              if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                                registertry(context);
+                              }
                             },
                             child: Text(
                               "SIGNUP",
@@ -367,7 +441,7 @@ class SignUpDoctor extends StatelessWidget {
                           children: [
                             Text(
                               "Already have an account?",
-                              style: TextStyle(color: Color.fromRGBO(63, 59, 108, 1),fontWeight: FontWeight.bold,fontSize: 15),
+                              style: TextStyle(color: Color.fromRGBO(63, 59, 108, 1), fontWeight: FontWeight.bold, fontSize: 15),
                             ),
                             TextButton(
                               onPressed: () {
@@ -378,7 +452,7 @@ class SignUpDoctor extends StatelessWidget {
                               },
                               child: Text(
                                 "LOGIN",
-                                style: TextStyle(color: Color(0xFF9F73AB),fontSize: 20, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Color(0xFF9F73AB), fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
