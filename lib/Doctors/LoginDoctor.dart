@@ -1,4 +1,5 @@
 import 'package:derma/Doctors/HomeDoctor.dart';
+import 'package:derma/Doctors/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -32,7 +33,7 @@ class LoginDoctor extends StatelessWidget {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeDoctor()),
+        MaterialPageRoute(builder: (context) => RootPage()),
       );
     } else {
 

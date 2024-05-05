@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:derma/Doctors/HomeDoctor.dart';
+import 'package:derma/Doctors/root_page.dart';
 import 'package:flutter/material.dart';
 import 'LoginDoctor.dart';
 import 'package:http/http.dart' as http;
@@ -47,7 +48,7 @@ class SignUpDoctor extends StatelessWidget {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeDoctor()),
+          MaterialPageRoute(builder: (context) => RootPage()),
         );
       } else {
         // Handle other status codes
@@ -447,7 +448,7 @@ class SignUpDoctor extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => LoginDoctor()),
+                                  MaterialPageRoute(builder: (context) => RootPage()),
                                 );
                               },
                               child: Text(
