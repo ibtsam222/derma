@@ -448,7 +448,7 @@ class SignUpDoctor extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => RootPage()),
+                                  MaterialPageRoute(builder: (context) => LoginDoctor()),
                                 );
                               },
 

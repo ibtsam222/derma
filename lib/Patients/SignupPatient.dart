@@ -449,7 +449,7 @@ class SignUpPatient extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => RootPatient()),
+                                  MaterialPageRoute(builder: (context) => LoginPatient()),
                                 );
                               },
                               child: Text(
