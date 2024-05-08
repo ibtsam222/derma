@@ -12,7 +12,7 @@ class MedicationPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 31),
 
           Container(
             width: 312,
