@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'SignupPatient.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 void main() => runApp(
   MaterialApp(
@@ -16,7 +18,8 @@ void main() => runApp(
 class LoginPatient extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  final storage = FlutterSecureStorage();
+  final Storage localStorage2 = Storage(FlutterSecureStorage());
   Future<void> _loginPatient(BuildContext context) async {
     final url = Uri.parse('http://dermdiag.somee.com/api/Patients/Login');
     final response = await http.post(
@@ -31,11 +34,13 @@ class LoginPatient extends StatelessWidget {
     );
 
     if (response.statusCode == 200) {
-
+      final jsonResponse = jsonDecode(response.body);
+      final patientId = jsonResponse['id'];
+      print('Doctor ID: $patientId');
+      await localStorage2.addLoginId(patientId.toString());
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => RootPatient()),
-
       );
     } else {
 
@@ -252,5 +257,18 @@ class LoginPatient extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+class Storage {
+  final FlutterSecureStorage _storage;
+
+  Storage(this._storage);
+
+  Future<String?> getLoginId() async {
+    return await _storage.read(key: 'id');
+  }
+
+  Future<void> addLoginId(String id) async {
+    await _storage.write(key: 'id', value: id);
   }
 }

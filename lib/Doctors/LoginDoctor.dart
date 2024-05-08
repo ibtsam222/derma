@@ -3,6 +3,7 @@ import 'package:derma/Doctors/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:derma/Doctors/SignupDoctor.dart';
 
 void main() => runApp(
@@ -12,9 +13,12 @@ void main() => runApp(
   ),
 );
 
+
 class LoginDoctor extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final storage = FlutterSecureStorage();
+  final LocalStorage localStorage = LocalStorage(FlutterSecureStorage());
 
   Future<void> _loginDoctor(BuildContext context) async {
     final url = Uri.parse('http://dermdiag.somee.com/api/Doctors/LoginDoctor');
@@ -30,15 +34,15 @@ class LoginDoctor extends StatelessWidget {
     );
 
     if (response.statusCode == 200) {
-
+      final jsonResponse = jsonDecode(response.body);
+      final doctorId = jsonResponse['id'];
+      print('Doctor ID: $doctorId');
+      await localStorage.addLoginId(doctorId.toString());
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => RootPage()),
       );
     } else {
-
-
-
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -252,5 +256,19 @@ class LoginDoctor extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class LocalStorage {
+  final FlutterSecureStorage _storage;
+
+  LocalStorage(this._storage);
+
+  Future<String?> getLoginId() async {
+    return await _storage.read(key: 'id');
+  }
+
+  Future<void> addLoginId(String id) async {
+    await _storage.write(key: 'id', value: id);
   }
 }

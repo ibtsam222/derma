@@ -4,7 +4,7 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../Both/ScanPage.dart';
 import '../Massages.dart';
-import '../Both/MedicationPage.dart';
+import 'MedicationPage.dart';
 import '../Patients/favourite.dart';
 import 'HomeDoctor.dart';
 

@@ -1,3 +1,4 @@
+import 'package:derma/ui_Todo/pages/AddTreatmentPlan.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -16,7 +17,7 @@ class MedicationPage extends StatelessWidget {
             width: 312,
             height: 60,
             child: Text(
-              'Explore your treatment plan and add your own',
+              'Add treatment plan',
               style: TextStyle(
                 fontSize: 20,
                 color: Color(0xFF454571),
@@ -51,7 +52,7 @@ class MedicationPage extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => Doctor_instructions(),
+                    builder: (_) => AddPlanPage(),
                   ),
                 );
               },
