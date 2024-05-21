@@ -1,6 +1,7 @@
+import 'package:derma/Patients/yourtask.dart';
 import 'package:flutter/material.dart';
 import 'package:derma/Both/pateintordoctor.dart';
-import '../Patients/CardForm.dart';
+import '../ui_Todo/pages/home_page.dart';
 void main() => runApp(
   MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -100,7 +101,7 @@ class Selectlan extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MySample()),
+                          MaterialPageRoute(builder: (context) =>PatiantPage()),
                         );
                       },
                       child: Text(

@@ -1,3 +1,4 @@
+import 'package:derma/Patients/yourtask.dart';
 import 'package:flutter/material.dart';
 import 'package:derma/ui_Todo/pages/Treatment%20plan.dart';
 import '../size_config.dart';
@@ -183,7 +184,7 @@ class Doctor_instructions extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(),)
+                                  builder: (context) => MyApp(),)
                             );
 
                           },

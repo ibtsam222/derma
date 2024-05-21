@@ -1,12 +1,21 @@
-import 'package:derma/ui_Todo/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:derma/Both/Selectlan.dart';
-import 'package:derma/Doctors/root_page.dart';
+import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 
-import '../ui_Todo/pages/AddTreatmentPlan.dart';
+import '../ui_Todo/services/db.helper.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ),
+  );
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await DBHelper.initDb();
+  await GetStorage.init();
+  runApp(const MyApp());
 }
 
 class Constants {

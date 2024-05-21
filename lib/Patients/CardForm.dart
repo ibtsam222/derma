@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'appointmentdone.dart';
-import '../Both/constants.dart';
 
 void main() => runApp(const MySample());
 
@@ -85,10 +84,10 @@ class MySampleState extends State<MySample> {
                             obscureCardNumber: true,
                             obscureCardCvv: true,
                             isHolderNameVisible: true,
-                            cardBgColor: isLightTheme
-                                ? Constants.cardBgLightColor
-                                : Constants.cardBgColor,
-                            backgroundImage: useBackgroundImage ? 'assets/images/go.png' : null,
+                            // cardBgColor: isLightTheme
+                            //     // ? theme.cardBgLightColor
+                            //     // : Constants.greenColor,
+                            // backgroundImage: useBackgroundImage ? 'assets/images/go.png' : null,
                             isSwipeGestureEnabled: true,
                             onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
                             customCardTypeIcons: <CustomCardTypeIcon>[
